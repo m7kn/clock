@@ -4,20 +4,20 @@ SETTINGS = {
     'main_window': {
         'geometry': {
             'type': 'list',
-            'default': [100, 100, 300, 200],
+            'default': [100, 100, 300, 150],
             'widget': None  # Ez egy speciális eset, nem jelenik meg a beállítások ablakban
         },
         'frameless': {
             'type': 'bool',
-            'default': False,
+            'default': True,
             'widget': QCheckBox,
             'label': 'Frameless Window'
-        },
-        'transparent': {
-            'type': 'bool',
-            'default': False,
-            'widget': QCheckBox,
-            'label': 'Transparent Background'
+        },    
+        'background_color': {
+            'type': 'color',
+            'default': [77, 103, 220, 100],  # Teljesen átlátszó fekete
+            'widget': QColorDialog,
+            'label': 'Background Color'
         },
     },
     'clock': {
@@ -42,8 +42,8 @@ SETTINGS = {
             'label': 'Text Color'
         },
         'background_color': {
-            'type': 'color',
-            'default': [0, 0, 0, 200],
+            'type': 'color',          
+            'default': [32, 18, 223, 200],
             'widget': QColorDialog,
             'label': 'Background Color'
         },
@@ -55,7 +55,7 @@ SETTINGS = {
         },
         'padding_horizontal': {
             'type': 'int',
-            'default': 5,
+            'default': 20,
             'widget': QSpinBox,
             'label': 'Horizontal Padding',
             'min': 0,
@@ -63,7 +63,7 @@ SETTINGS = {
         },
         'padding_vertical': {
             'type': 'int',
-            'default': 5,
+            'default': 16,
             'widget': QSpinBox,
             'label': 'Vertical Padding',
             'min': 0,

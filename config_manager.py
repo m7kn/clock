@@ -30,7 +30,10 @@ class ConfigManager:
                 if 'color' in config['clock']:
                     config['clock']['color'] = list(config['clock']['color'])
                 if 'background_color' in config['clock']:
-                    config['clock']['background_color'] = list(config['clock']['background_color'])                        
+                    config['clock']['background_color'] = list(config['clock']['background_color'])
+            if 'main_window' in config:
+                if 'background_color' in config['main_window']:
+                    config['main_window']['background_color'] = list(config['main_window']['background_color'])                      
 
             return config
         except FileNotFoundError:

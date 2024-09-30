@@ -89,7 +89,8 @@ class SettingsWindow(QDialog):
         self.settings_changed.emit()
 
     def open_color_dialog(self, section, key, button):
-        color = QColorDialog.getColor(button.color, self, f"Choose {SETTINGS[section][key]['label']}")
+        current_color = QColor(*self.config_manager.get_setting(section, key))
+        color = QColorDialog.getColor(current_color, self, f"Choose {SETTINGS[section][key]['label']}", QColorDialog.ShowAlphaChannel)
         if color.isValid():
             button.setColor(color)
             self.save_setting(section, key, list(color.getRgb()))
