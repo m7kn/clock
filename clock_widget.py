@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QFont, QColor
 import datetime
+from font_manager import font_manager
 
 class ClockWidget(QWidget):
     """A widget that displays a digital clock."""
@@ -37,7 +38,11 @@ class ClockWidget(QWidget):
     def update_style(self):
         """Update the style of the clock widget based on the current configuration."""
         config = self.config_manager.get_config()
-        font = QFont(config['clock']['font'], config['clock']['font_size'])
+        use_custom_fonts = config['clock']['use_custom_fonts']
+        font_name = config['clock']['font']
+        font_size = config['clock']['font_size']        
+        font = font_manager.get_font(font_name, use_custom_fonts)
+        font.setPointSize(font_size)
         self.time_label.setFont(font)
         color = QColor(*config['clock']['color'])
         bg_color = QColor(*config['clock']['background_color'])
@@ -56,7 +61,15 @@ class ClockWidget(QWidget):
         if padding_h == 0 and padding_v == 0:
             self.layout().setContentsMargins(0, 0, 0, 0)
         else:
-            self.layout().setContentsMargins(padding_h, padding_v, padding_h, padding_v)        
+            self.layout().setContentsMargins(padding_h, padding_v, padding_h, padding_v)
+        
+        # Set fixed size based on maximum possible time string
+        # max_time = "00:00:00" if config['clock']['show_seconds'] else "00:00"
+        # self.time_label.setText(max_time)
+        # self.time_label.adjustSize()
+        # size = self.time_label.sizeHint()
+        # self.time_label.setFixedSize(size)
+        # self.setFixedSize(size)      
 
     def update_config(self):
         """Update the widget's style and time display after a configuration change."""

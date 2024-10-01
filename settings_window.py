@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox, QFontComboBox, QCheckBox, QPushButton, QGroupBox, QColorDialog
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtGui import QFont, QColor, QFontDatabase
 from settings_definition import SETTINGS
+from font_manager import font_manager
 
 class ColorButton(QPushButton):
     """A custom button for color selection."""
@@ -58,16 +59,22 @@ class SettingsWindow(QDialog):
                 if setting['widget'] == QColorDialog:
                     widget = ColorButton(QColor(*self.config_manager.get_setting(section, key)))
                     widget.clicked.connect(lambda checked, s=section, k=key, w=widget: self.open_color_dialog(s, k, w))
+                elif setting['widget'] == QFontComboBox:
+                    widget = QFontComboBox()
+                    self.update_font_list(widget)
+                    widget.currentFontChanged.connect(lambda font, s=section, k=key: self.save_setting(s, k, font.family()))                    
                 else:
                     widget = setting['widget']()
                     
                     if isinstance(widget, QSpinBox):
                         widget.setRange(setting.get('min', 0), setting.get('max', 100))
                         widget.valueChanged.connect(lambda value, s=section, k=key: self.save_setting(s, k, value))
-                    elif isinstance(widget, QFontComboBox):
-                        widget.currentFontChanged.connect(lambda font, s=section, k=key: self.save_setting(s, k, font.family()))
+                    # elif isinstance(widget, QFontComboBox):
+                    #    widget.currentFontChanged.connect(lambda font, s=section, k=key: self.save_setting(s, k, font.family()))
                     elif isinstance(widget, QCheckBox):
                         widget.stateChanged.connect(lambda state, s=section, k=key: self.save_setting(s, k, bool(state)))
+                        if key == 'use_custom_fonts':
+                            widget.stateChanged.connect(self.update_font_combo)
                 
                 setattr(self, f"{section}_{key}_widget", widget)
                 
@@ -104,4 +111,26 @@ class SettingsWindow(QDialog):
         if color.isValid():
             button.setColor(color)
             self.save_setting(section, key, list(color.getRgb()))
+            
+    def update_font_list(self, widget):
+        use_custom_fonts = self.config_manager.get_setting('clock', 'use_custom_fonts')
+        current_font = widget.currentFont().family()
+        widget.clear()
+        if use_custom_fonts:
+            for font in font_manager.get_custom_fonts():
+                widget.addItem(font)
+            if current_font not in font_manager.get_custom_fonts():
+                current_font = font_manager.get_custom_fonts()[0] if font_manager.get_custom_fonts() else ""
+        else:
+            widget.setWritingSystem(QFontDatabase.Any)
+            if current_font not in QFontDatabase().families():
+                current_font = QFontDatabase().families()[0]
+        
+        widget.setCurrentFont(QFont(current_font))
+
+    def update_font_combo(self):
+        font_widget = getattr(self, "clock_font_widget")
+        self.update_font_list(font_widget)
+        current_font = self.config_manager.get_setting('clock', 'font')
+        font_widget.setCurrentFont(QFont(current_font))                   
             

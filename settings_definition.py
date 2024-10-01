@@ -22,15 +22,21 @@ SETTINGS = {
         },
     },
     'clock': {
+        'use_custom_fonts': {
+            'type': 'bool',
+            'default': True,
+            'widget': QCheckBox,
+            'label': 'Use Custom Fonts'
+        },        
         'font': {
             'type': 'str',
-            'default': 'Arial',
+            'default': 'Digital Display',
             'widget': QFontComboBox,
             'label': 'Font'
         },
         'font_size': {
             'type': 'int',
-            'default': 48,
+            'default': 64,
             'widget': QSpinBox,
             'label': 'Font Size',
             'min': 1,
