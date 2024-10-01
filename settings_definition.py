@@ -6,7 +6,7 @@ SETTINGS = {
     'main_window': {
         'geometry': {
             'type': 'list',
-            'default': [100, 100, 300, 150],
+            'default': [100, 100, 400, 150],
             'widget': None  # Special case, not shown in settings window
         },
         'frameless': {
