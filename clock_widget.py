@@ -4,13 +4,17 @@ from PyQt5.QtGui import QFont, QColor
 import datetime
 
 class ClockWidget(QWidget):
+    """A widget that displays a digital clock."""
+
     def __init__(self, config_manager):
+        """Initialize the clock widget."""
         super().__init__()
         self.config_manager = config_manager
         self.init_ui()
         self.start_timer()
 
     def init_ui(self):
+        """Set up the user interface for the clock widget."""
         layout = QVBoxLayout()
         self.time_label = QLabel()
         layout.addWidget(self.time_label, alignment=Qt.AlignCenter)
@@ -18,20 +22,20 @@ class ClockWidget(QWidget):
         self.update_style()
 
     def start_timer(self):
+        """Start a timer to update the clock every second."""
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)  # Update every second
 
     def update_time(self):
+        """Update the displayed time."""
         config = self.config_manager.get_config()
-        if config['clock']['show_seconds']:
-            time_format = '%H:%M:%S'
-        else:
-            time_format = '%H:%M'
+        time_format = '%H:%M:%S' if config['clock']['show_seconds'] else '%H:%M'
         current_time = datetime.datetime.now().strftime(time_format)
         self.time_label.setText(current_time)
 
     def update_style(self):
+        """Update the style of the clock widget based on the current configuration."""
         config = self.config_manager.get_config()
         font = QFont(config['clock']['font'], config['clock']['font_size'])
         self.time_label.setFont(font)
@@ -46,15 +50,16 @@ class ClockWidget(QWidget):
             padding: {padding_v}px {padding_h}px;
         ''')
         
-        self.setStyleSheet(f'background-color: transparent;')
+        self.setStyleSheet('background-color: transparent;')
         
-        # Ha mindkét padding 0, akkor állítsuk be a layout margóját 0-ra
+        # Set layout margins to 0 if both paddings are 0
         if padding_h == 0 and padding_v == 0:
             self.layout().setContentsMargins(0, 0, 0, 0)
         else:
             self.layout().setContentsMargins(padding_h, padding_v, padding_h, padding_v)        
 
     def update_config(self):
+        """Update the widget's style and time display after a configuration change."""
         self.update_style()
         self.update_time()
         

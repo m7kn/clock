@@ -4,15 +4,20 @@ from PyQt5.QtGui import QFont, QColor
 from settings_definition import SETTINGS
 
 class ColorButton(QPushButton):
+    """A custom button for color selection."""
+
     def __init__(self, color):
         super().__init__()
         self.setColor(color)
 
     def setColor(self, color):
+        """Set the button's color and update its appearance."""
         self.color = color
         self.setStyleSheet(f"background-color: {color.name()}; min-width: 32px; min-height: 32px;")
 
 class SettingsWindow(QDialog):
+    """A window for editing application settings."""
+
     settings_changed = pyqtSignal()
 
     def __init__(self, config_manager):
@@ -23,6 +28,7 @@ class SettingsWindow(QDialog):
         self.setMinimumSize(400, 300)
 
     def init_ui(self):
+        """Set up the user interface for the settings window."""
         layout = QVBoxLayout()
 
         # Clock settings
@@ -43,6 +49,7 @@ class SettingsWindow(QDialog):
         self.load_settings()
 
     def add_settings_to_layout(self, layout, section):
+        """Add settings widgets to the given layout for the specified section."""
         for key, setting in SETTINGS[section].items():
             if setting['widget'] is not None:
                 setting_layout = QHBoxLayout()
@@ -69,6 +76,7 @@ class SettingsWindow(QDialog):
                 layout.addLayout(setting_layout)
 
     def load_settings(self):
+        """Load current settings into the UI widgets."""
         for section in SETTINGS:
             for key, setting in SETTINGS[section].items():
                 if setting['widget'] is not None:
@@ -85,10 +93,12 @@ class SettingsWindow(QDialog):
                         widget.setChecked(value)
 
     def save_setting(self, section, key, value):
+        """Save a setting and emit the settings_changed signal."""
         self.config_manager.set_setting(section, key, value)
         self.settings_changed.emit()
 
     def open_color_dialog(self, section, key, button):
+        """Open a color dialog for color selection."""
         current_color = QColor(*self.config_manager.get_setting(section, key))
         color = QColorDialog.getColor(current_color, self, f"Choose {SETTINGS[section][key]['label']}", QColorDialog.ShowAlphaChannel)
         if color.isValid():

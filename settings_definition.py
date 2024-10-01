@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QSpinBox, QFontComboBox, QColorDialog, QCheckBox
 
+# Define the settings structure for the application
 SETTINGS = {
     'main_window': {
         'geometry': {
             'type': 'list',
             'default': [100, 100, 300, 150],
-            'widget': None  # Ez egy speciális eset, nem jelenik meg a beállítások ablakban
+            'widget': None  # Special case, not shown in settings window
         },
         'frameless': {
             'type': 'bool',
@@ -15,7 +16,7 @@ SETTINGS = {
         },    
         'background_color': {
             'type': 'color',
-            'default': [77, 103, 220, 100],  # Teljesen átlátszó fekete
+            'default': [77, 103, 220, 100],  # Partially transparent blue
             'widget': QColorDialog,
             'label': 'Background Color'
         },
@@ -73,6 +74,6 @@ SETTINGS = {
 }
 
 def get_default_config():
+    """Generate a default configuration based on the SETTINGS structure."""
     return {section: {key: setting['default'] for key, setting in items.items()}
             for section, items in SETTINGS.items()}
-    

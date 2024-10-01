@@ -8,6 +8,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     config_manager = ConfigManager('config.yaml')
     main_window = MainWindow(config_manager)
-    QTimer.singleShot(100, main_window.show)  # Add a small delay before showing the main window
+    # Add a small delay before showing the main window
+    QTimer.singleShot(100, main_window.show)
     sys.exit(app.exec_())
-    
