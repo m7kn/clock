@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import QTimer, Qt
-from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtGui import QFont, QColor, QPainter
 import datetime
 from font_manager import font_manager
 
@@ -18,7 +18,8 @@ class ClockWidget(QWidget):
         """Set up the user interface for the clock widget."""
         layout = QVBoxLayout()
         self.time_label = QLabel()
-        layout.addWidget(self.time_label, alignment=Qt.AlignCenter)
+        self.time_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.time_label)
         self.setLayout(layout)
         self.update_style()
 
@@ -34,6 +35,7 @@ class ClockWidget(QWidget):
         time_format = '%H:%M:%S' if config['clock']['show_seconds'] else '%H:%M'
         current_time = datetime.datetime.now().strftime(time_format)
         self.time_label.setText(current_time)
+        self.update()  # Force a repaint
 
     def update_style(self):
         """Update the style of the clock widget based on the current configuration."""
@@ -43,7 +45,9 @@ class ClockWidget(QWidget):
         font_size = config['clock']['font_size']        
         font = font_manager.get_font(font_name, use_custom_fonts)
         font.setPointSize(font_size)
+        
         self.time_label.setFont(font)
+        
         color = QColor(*config['clock']['color'])
         bg_color = QColor(*config['clock']['background_color'])
         padding_h = config['clock']['padding_horizontal']
@@ -62,14 +66,27 @@ class ClockWidget(QWidget):
             self.layout().setContentsMargins(0, 0, 0, 0)
         else:
             self.layout().setContentsMargins(padding_h, padding_v, padding_h, padding_v)
+
+    def paintEvent(self, event):
+        """Custom paint event to draw the LCD background if needed."""
+        super().paintEvent(event)
         
-        # Set fixed size based on maximum possible time string
-        # max_time = "00:00:00" if config['clock']['show_seconds'] else "00:00"
-        # self.time_label.setText(max_time)
-        # self.time_label.adjustSize()
-        # size = self.time_label.sizeHint()
-        # self.time_label.setFixedSize(size)
-        # self.setFixedSize(size)      
+        config = self.config_manager.get_config()
+        is_lcd_font = font_manager.is_lcd_font(config['clock']['font'])
+            
+        if is_lcd_font:
+            painter = QPainter(self)
+            painter.setFont(self.time_label.font())
+            color = QColor(*config['clock']['color'])
+            lcd_opacity = config['clock']['lcd_background_opacity']
+            painter.setPen(QColor(color.red(), color.green(), color.blue(), lcd_opacity))
+            
+            rect = self.time_label.geometry()
+            painter.drawText(rect, Qt.AlignCenter, self.get_background_text())
+
+    def get_background_text(self):
+        config = self.config_manager.get_config()
+        return "88:88:88" if config['clock']['show_seconds'] else "88:88"
 
     def update_config(self):
         """Update the widget's style and time display after a configuration change."""

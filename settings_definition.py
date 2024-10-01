@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QSpinBox, QFontComboBox, QColorDialog, QCheckBox
+from PyQt5.QtWidgets import QSpinBox, QFontComboBox, QColorDialog, QCheckBox, QSlider
+from PyQt5.QtCore import Qt
 
 # Define the settings structure for the application
 SETTINGS = {
@@ -76,6 +77,15 @@ SETTINGS = {
             'min': 0,
             'max': 100
         },
+        'lcd_background_opacity': {
+            'type': 'int',
+            'default': 50,
+            'widget': QSlider,
+            'label': 'LCD Background Opacity',
+            'min': 0,
+            'max': 255,
+            'orientation': Qt.Horizontal
+        },             
     }
 }
 

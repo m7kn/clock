@@ -10,8 +10,6 @@ def load_fonts():
     font_manager.load_custom_fonts()
     if not font_manager.get_custom_fonts():
         print("Warning: No custom fonts were loaded.")
-    else:
-        print(f"Successfully loaded {len(font_manager.get_custom_fonts())} custom fonts.")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)       

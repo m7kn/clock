@@ -6,6 +6,7 @@ class FontManager:
     def __init__(self):
         self.custom_fonts = {}
         self.font_ids = []
+        self.lcd_fonts = set()
 
     def load_custom_fonts(self):
         fonts_dir = 'fonts'
@@ -16,12 +17,13 @@ class FontManager:
         for family_dir in os.listdir(fonts_dir):
             family_path = os.path.join(fonts_dir, family_dir)
             if os.path.isdir(family_path):
+                is_lcd_font = 'lcd' in family_dir.lower()
                 for font_file in os.listdir(family_path):
                     if font_file.lower().endswith(('.ttf', '.otf')):
                         font_path = os.path.join(family_path, font_file)
-                        self.load_single_font(font_path)
+                        self.load_single_font(font_path, is_lcd_font)
 
-    def load_single_font(self, font_path):
+    def load_single_font(self, font_path, is_lcd_font=False):
         try:
             if not QFileInfo(font_path).isReadable():
                 print(f"Warning: Font file is not readable: {font_path}")
@@ -34,7 +36,8 @@ class FontManager:
                 if font_families:
                     font_family = font_families[0]
                     self.custom_fonts[font_family] = font_path
-                    print(f"Loaded custom font: {font_family}")
+                    if is_lcd_font:
+                        self.lcd_fonts.add(font_family)
                 else:
                     print(f"Warning: Could not load font families for {font_path}")
             else:
@@ -52,5 +55,8 @@ class FontManager:
         if use_custom_fonts and font_name in self.custom_fonts:
             return QFont(font_name)
         return QFont(font_name)
+
+    def is_lcd_font(self, font_name):
+        return font_name in self.lcd_fonts
 
 font_manager = FontManager()
