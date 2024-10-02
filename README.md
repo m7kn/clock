@@ -2,6 +2,8 @@
 
 A customizable desktop clock application built with PyQt5.
 
+![screenshot](./screenshot.png)
+
 ## Features
 
 - Displays current time in digital format
