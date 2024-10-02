@@ -2,7 +2,11 @@
 
 A customizable desktop clock application built with PyQt5.
 
-![screenshot](./screenshot.png)
+<img src="./screenshot.png" alt="screenshot 1" width="400">
+
+<img src="./screenshot_2.png" alt="screenshot 2" width="400">
+
+<img src="./screenshot_3.png" alt="screenshot 3" width="400">
 
 ## Features
 
