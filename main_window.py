@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMenu, QMessageBox
 from PyQt5.QtCore import Qt, QPoint, QRect
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QGuiApplication
 from clock_widget import ClockWidget
 from settings_window import SettingsWindow
 from utils import rgba_to_string
@@ -42,12 +42,15 @@ class MainWindow(QMainWindow):
             self.setWindowFlags(self.windowFlags() & ~Qt.FramelessWindowHint)
         
         bg_color = QColor(*config['main_window']['background_color'])
+        corner_radius = config['main_window']['corner_radius']
         self.setStyleSheet(f"""
             QMainWindow {{
                 background-color: {rgba_to_string(bg_color.getRgb())};
+                border-radius: {corner_radius}px;
             }}
             QWidget#centralWidget {{
                 background-color: {rgba_to_string(bg_color.getRgb())};
+                border-radius: {corner_radius}px;
             }}
             QMenu {{
                 background-color: white;
@@ -101,7 +104,12 @@ class MainWindow(QMainWindow):
     def mouseMoveEvent(self, event):
         """Handle mouse move events for window dragging."""
         if self.draggable and self.config_manager.get_config()['main_window']['frameless']:
-            self.move(self.mapToGlobal(event.pos() - self.offset))
+            new_pos = self.mapToGlobal(event.pos() - self.offset)
+            # Adjust the position to account for the corner radius
+            corner_radius = self.config_manager.get_config()['main_window']['corner_radius']
+            new_pos.setX(max(corner_radius, min(new_pos.x(), QGuiApplication.primaryScreen().geometry().width() - self.width() + corner_radius)))
+            new_pos.setY(max(corner_radius, min(new_pos.y(), QGuiApplication.primaryScreen().geometry().height() - self.height() + corner_radius)))
+            self.move(new_pos)
 
     def mouseReleaseEvent(self, event):
         """Handle mouse release events for window dragging."""

@@ -21,6 +21,14 @@ SETTINGS = {
             'widget': QColorDialog,
             'label': 'Background Color'
         },
+        'corner_radius': {
+            'type': 'int',
+            'default': 30,
+            'widget': QSpinBox,
+            'label': 'Corner Radius',
+            'min': 0,
+            'max': 50
+        },        
     },
     'clock': {
         'use_custom_fonts': {
