@@ -13,6 +13,8 @@ A simple yet customizable desktop clock application built with PyQt5.
 
 <img src="screenshots/screenshot_4.png" alt="screenshot 4" width="400">
 
+<img src="screenshots/screenshot_5.png" alt="screenshot 5" width="400">
+
 ## Features
 - Digital clock display
 - Customizable font and size
