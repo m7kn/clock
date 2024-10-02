@@ -6,7 +6,7 @@ SETTINGS = {
     'main_window': {
         'geometry': {
             'type': 'list',
-            'default': [100, 100, 400, 150],
+            'default': [186, 122, 480, 155],
             'widget': None  # Special case, not shown in settings window
         },
         'frameless': {
@@ -17,7 +17,7 @@ SETTINGS = {
         },    
         'background_color': {
             'type': 'color',
-            'default': [77, 103, 220, 100],  # Partially transparent blue
+            'default': [220, 220, 220, 0],  # Partially transparent blue
             'widget': QColorDialog,
             'label': 'Background Color'
         },
@@ -45,7 +45,7 @@ SETTINGS = {
         },
         'font_size': {
             'type': 'int',
-            'default': 64,
+            'default': 81,
             'widget': QSpinBox,
             'label': 'Font Size',
             'min': 1,
@@ -53,7 +53,7 @@ SETTINGS = {
         },
         'color': {
             'type': 'color',
-            'default': [255, 255, 255, 255],
+            'default': [209, 209, 209, 255],
             'widget': QColorDialog,
             'label': 'Text Color'
         },
@@ -71,7 +71,7 @@ SETTINGS = {
         },
         'padding_horizontal': {
             'type': 'int',
-            'default': 20,
+            'default': 17,
             'widget': QSpinBox,
             'label': 'Horizontal Padding',
             'min': 0,
@@ -87,7 +87,7 @@ SETTINGS = {
         },
         'lcd_background_opacity': {
             'type': 'int',
-            'default': 50,
+            'default': 189,
             'widget': QSlider,
             'label': 'LCD Background Opacity',
             'min': 0,
