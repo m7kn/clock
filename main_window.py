@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
 
     def show_about_dialog(self):
         """Show the about dialog."""
-        QMessageBox.about(self, "About", "Desktop Clock\n\nCreated by Norbert Molnár\nVersion 0.1")
+        QMessageBox.about(self, "About", "Desktop Clock\n\nCreated by Norbert Molnár\nVersion 0.2")
 
     def mousePressEvent(self, event):
         """Handle mouse press events for window dragging."""

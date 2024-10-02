@@ -1,77 +1,68 @@
-# Desktop Clock
+# Desktop Clock Application
+Version: 0.2
 
-A customizable desktop clock application built with PyQt5.
+A simple yet customizable desktop clock application built with PyQt5.
 
-<img src="./screenshot.png" alt="screenshot 1" width="400">
+## Screenshots
 
-<img src="./screenshot_2.png" alt="screenshot 2" width="400">
+<img src="screenshots/screenshot.png" alt="screenshot 1" width="400">
 
-<img src="./screenshot_3.png" alt="screenshot 3" width="400">
+<img src="screenshots/screenshot_2.png" alt="screenshot 2" width="400">
 
-<img src="./screenshot_4.png" alt="screenshot 4" width="400">
+<img src="screenshots/screenshot_3.png" alt="screenshot 3" width="400">
 
+<img src="screenshots/screenshot_4.png" alt="screenshot 4" width="400">
 
 ## Features
-
-- Displays current time in digital format
-- Customizable font, color, and size
-- Frameless window option for a sleek look
-- Adjustable background transparency
-- Drag-and-drop functionality for easy repositioning
-- Settings window for easy customization
-
-## Requirements
-
-- Python 3.6+
-- PyQt5
-- PyYAML
+- Digital clock display
+- Customizable font and size
+- Adjustable colors (clock text and background)
+- Adjustable transparency
+- Frameless mode
+- Optional seconds display
+- Corner rounding adjustment
+- Modern settings window
 
 ## Installation
-
-1. Clone this repository:
+1. Clone the repository:
 ```sh
-git clone https://github.com/m7kn/clock.git
+git clone https://github.com/your-username/desktop-clock.git
 ```
-
-2. Create and activate virtual env:
+2. Enter the project directory:
+```sh
+cd desktop-clock
+```
+3. Optional: create a virtual environment:
 ```sh
 python -m venv venv
 source venv/bin/activate
 ```
-
-3. Install the required packages:
+4. Install required dependencies:
 ```sh
 pip install -r requirements.txt
 ```
 
 ## Usage
-
-Run the main.py file to start the application:
+Run the `main.py` file:
 ```sh
 python main.py
 ```
-Right-click on the clock to access the context menu, where you can open the settings, view information about the app, or exit.
 
-## Configuration
+## Settings
+The application can be customized through the "Settings" option in the context menu, accessible by right-clicking. Settings include:
+- Clock font and size
+- Clock text color and background color
+- Seconds display
+- Frameless mode
+- Horizontal and vertical padding
+- Main window background color
+- Corner rounding amount
 
-The application uses a YAML configuration file (`config.yaml`) to store settings. If the file doesn't exist, default settings will be used and a new configuration file will be created.
-
-You can customize the following settings:
-
-- Main Window:
-  - Frameless mode
-  - Background color
-  - Window position and size
-
-- Clock:
-  - Font and font size
-  - Text color
-  - Background color
-  - Show/hide seconds
-  - Horizontal and vertical padding
+## Developer Notes
+- Settings are stored in a YAML file
+- The application supports custom fonts
+- Color picker buttons now display the selected color's hex code
+- Settings window has a modern design with improved appearance and usability
 
 ## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-
+If you'd like to contribute to the project, please open an issue or send a pull request.
