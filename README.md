@@ -8,6 +8,9 @@ A customizable desktop clock application built with PyQt5.
 
 <img src="./screenshot_3.png" alt="screenshot 3" width="400">
 
+<img src="./screenshot_4.png" alt="screenshot 4" width="400">
+
+
 ## Features
 
 - Displays current time in digital format
