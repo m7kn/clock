@@ -1,5 +1,5 @@
 # Desktop Clock Application
-Version: 0.2
+Version: 0.3
 
 A simple yet customizable desktop clock application built with PyQt5.
 
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 ## Usage
 Run the `main.py` file:
 ```sh
-python main.py
+python src/main.py
 ```
 
 ## Settings
