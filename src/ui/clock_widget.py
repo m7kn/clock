@@ -17,6 +17,7 @@ class ClockWidget(QWidget):
     def init_ui(self):
         """Set up the user interface for the clock widget."""
         layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         self.time_label = QLabel()
         self.time_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.time_label)
@@ -40,52 +41,60 @@ class ClockWidget(QWidget):
     def update_style(self):
         """Update the style of the clock widget based on the current configuration."""
         config = self.config_manager.get_config()
+        self.apply_font(config)
+        self.apply_colors(config)
+        self.apply_padding(config)
+
+    def apply_font(self, config):
+        """Apply font settings to the time label."""
         use_custom_fonts = config['clock']['use_custom_fonts']
         font_name = config['clock']['font']
-        font_size = config['clock']['font_size']        
+        font_size = config['clock']['font_size']
         font = font_manager.get_font(font_name, use_custom_fonts)
         font.setPointSize(font_size)
-        
         self.time_label.setFont(font)
-        
+
+    def apply_colors(self, config):
+        """Apply color settings to the time label."""
         color = QColor(*config['clock']['color'])
         bg_color = QColor(*config['clock']['background_color'])
-        padding_h = config['clock']['padding_horizontal']
-        padding_v = config['clock']['padding_vertical']
-        
         self.time_label.setStyleSheet(f'''
             color: rgba{color.getRgb()};
             background-color: rgba{bg_color.getRgb()};
-            padding: {padding_v}px {padding_h}px;
         ''')
-        
         self.setStyleSheet('background-color: transparent;')
-        
-        # Set layout margins to 0 if both paddings are 0
+
+    def apply_padding(self, config):
+        """Apply padding settings to the layout."""
+        padding_h = config['clock']['padding_horizontal']
+        padding_v = config['clock']['padding_vertical']
         if padding_h == 0 and padding_v == 0:
             self.layout().setContentsMargins(0, 0, 0, 0)
         else:
             self.layout().setContentsMargins(padding_h, padding_v, padding_h, padding_v)
+        self.time_label.setStyleSheet(self.time_label.styleSheet() + f'''
+            padding: {padding_v}px {padding_h}px;
+        ''')
 
     def paintEvent(self, event):
         """Custom paint event to draw the LCD background if needed."""
         super().paintEvent(event)
-        
         config = self.config_manager.get_config()
-        is_lcd_font = font_manager.is_lcd_font(config['clock']['font'])
-            
-        if is_lcd_font:
-            painter = QPainter(self)
-            painter.setFont(self.time_label.font())
-            color = QColor(*config['clock']['color'])
-            lcd_opacity = config['clock']['lcd_background_opacity']
-            painter.setPen(QColor(color.red(), color.green(), color.blue(), lcd_opacity))
-            
-            rect = self.time_label.geometry()
-            painter.drawText(rect, Qt.AlignCenter, self.get_background_text())
+        if font_manager.is_lcd_font(config['clock']['font']):
+            self.draw_lcd_background(config)
 
-    def get_background_text(self):
-        config = self.config_manager.get_config()
+    def draw_lcd_background(self, config):
+        """Draw the LCD background for the clock."""
+        painter = QPainter(self)
+        painter.setFont(self.time_label.font())
+        color = QColor(*config['clock']['color'])
+        lcd_opacity = config['clock']['lcd_background_opacity']
+        painter.setPen(QColor(color.red(), color.green(), color.blue(), lcd_opacity))
+        rect = self.time_label.geometry()
+        painter.drawText(rect, Qt.AlignCenter, self.get_background_text(config))
+
+    def get_background_text(self, config):
+        """Get the background text for the LCD display."""
         return "88:88:88" if config['clock']['show_seconds'] else "88:88"
 
     def update_config(self):

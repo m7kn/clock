@@ -53,19 +53,18 @@ SETTINGS = {
         },
         'seconds_font_size': {
             'type': 'int',
-            'default': 81,  # Same as the main font size by default
+            'default': 81,  # Alapértelmezetten ugyanaz, mint a fő betűméret
             'widget': QSpinBox,
             'label': 'Seconds Font Size',
             'min': 1,
             'max': 200
         },
-        'seconds_alignment': {
-            'type': 'str',
-            'default': 'center',
-            'widget': QComboBox,
-            'label': 'Seconds Alignment',
-            'options': ['top', 'center', 'bottom']
-        },        
+        'seconds_color': {
+            'type': 'color',
+            'default': [209, 209, 209, 255],  # Alapértelmezetten ugyanaz, mint a fő szín
+            'widget': QColorDialog,
+            'label': 'Seconds Color'
+        },      
         'color': {
             'type': 'color',
             'default': [209, 209, 209, 255],
