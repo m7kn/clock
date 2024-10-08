@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QFont, QColor, QPainter
 import datetime
-from font_manager import font_manager
+from utils.font_manager import font_manager
 
 class ClockWidget(QWidget):
     """A widget that displays a digital clock."""

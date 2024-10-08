@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QSpinBox, QFontComboBox, QColorDialog, QCheckBox, QSlider
+from PyQt5.QtWidgets import QSpinBox, QFontComboBox, QColorDialog, QCheckBox, QSlider, QComboBox
 from PyQt5.QtCore import Qt
 
 # Define the settings structure for the application
@@ -51,6 +51,21 @@ SETTINGS = {
             'min': 1,
             'max': 200
         },
+        'seconds_font_size': {
+            'type': 'int',
+            'default': 81,  # Same as the main font size by default
+            'widget': QSpinBox,
+            'label': 'Seconds Font Size',
+            'min': 1,
+            'max': 200
+        },
+        'seconds_alignment': {
+            'type': 'str',
+            'default': 'center',
+            'widget': QComboBox,
+            'label': 'Seconds Alignment',
+            'options': ['top', 'center', 'bottom']
+        },        
         'color': {
             'type': 'color',
             'default': [209, 209, 209, 255],

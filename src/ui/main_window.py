@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMenu, QMessageBox
 from PyQt5.QtCore import Qt, QPoint, QRect
 from PyQt5.QtGui import QColor, QGuiApplication
-from clock_widget import ClockWidget
-from settings_window import SettingsWindow
-from utils import rgba_to_string
+from .clock_widget import ClockWidget
+from .settings_window import SettingsWindow
+from utils.utils import rgba_to_string
 
 class MainWindow(QMainWindow):
     """The main window of the desktop clock application."""
@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
 
     def show_about_dialog(self):
         """Show the about dialog."""
-        QMessageBox.about(self, "About", "Desktop Clock\n\nCreated by Norbert Molnár\nVersion 0.2")
+        QMessageBox.about(self, "About", "Desktop Clock\n\nCreated by Norbert Molnár\nVersion 0.3")
 
     def mousePressEvent(self, event):
         """Handle mouse press events for window dragging."""

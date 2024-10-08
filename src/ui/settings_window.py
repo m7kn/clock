@@ -1,38 +1,11 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox, QFontComboBox, QCheckBox, QPushButton, QGroupBox, QColorDialog, QSlider
+from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
+                             QSpinBox, QFontComboBox, QCheckBox, QGroupBox, 
+                             QSlider, QComboBox, QColorDialog)
 from PyQt5.QtCore import pyqtSignal, Qt
-from PyQt5.QtGui import QFont, QColor, QFontDatabase, QPalette, QColor
-from settings_definition import SETTINGS
-from font_manager import font_manager
-
-
-class ColorButton(QPushButton):
-    """A custom button for color selection."""
-
-    def __init__(self, color):
-        super().__init__()
-        self.setColor(color)
-        self.setMinimumSize(100, 25)
-
-    def setColor(self, color):
-        """Set the button's color and update its appearance."""
-        self.color = color
-        hex_color = color.name().upper()
-        text_color = "#FFFFFF" if self.get_contrast_ratio(color) < 4.5 else "#000000"
-        self.setText(hex_color)
-        self.setStyleSheet(f"""
-            background-color: {hex_color};
-            color: {text_color};
-            border: 1px solid #bdc3c7;
-            border-radius: 4px;
-            padding: 5px;
-            font-family: monospace;
-            font-size: 12px;
-        """)
-
-    def get_contrast_ratio(self, color):
-        """Calculate the contrast ratio for determining text color."""
-        luminance = (0.299 * color.red() + 0.587 * color.green() + 0.114 * color.blue()) / 255
-        return (luminance + 0.05) / 0.05 if luminance > 0.5 else 0.05 / (luminance + 0.05)
+from PyQt5.QtGui import QFont, QColor, QFontDatabase
+from utils.settings_definition import SETTINGS
+from utils.font_manager import font_manager
+from .color_button import ColorButton
 
 
 class SettingsWindow(QDialog):
@@ -106,13 +79,13 @@ class SettingsWindow(QDialog):
             QPushButton:hover {
                 background-color: #2980b9;
             }
-            QFontComboBox, QSlider {
+            QFontComboBox, QSlider, QComboBox {
                 border: 1px solid #bdc3c7;
                 border-radius: 4px;
                 padding: 3px;
                 min-height: 25px;
             }
-            QSpinBox, QFontComboBox, QSlider {
+            QSpinBox, QFontComboBox, QSlider, QComboBox {
                 border: 1px solid #bdc3c7;
                 border-radius: 4px;
                 padding: 3px;
@@ -155,7 +128,11 @@ class SettingsWindow(QDialog):
                 elif setting['widget'] == QSlider:
                     widget = QSlider(setting['orientation'])
                     widget.setRange(setting['min'], setting['max'])
-                    widget.valueChanged.connect(lambda value, s=section, k=key: self.save_setting(s, k, value))                    
+                    widget.valueChanged.connect(lambda value, s=section, k=key: self.save_setting(s, k, value))
+                elif setting['widget'] == QComboBox:
+                    widget = QComboBox()
+                    widget.addItems(setting['options'])
+                    widget.currentTextChanged.connect(lambda value, s=section, k=key: self.save_setting(s, k, value))
                 else:
                     widget = setting['widget']()
                     
@@ -166,6 +143,9 @@ class SettingsWindow(QDialog):
                         widget.stateChanged.connect(lambda state, s=section, k=key: self.save_setting(s, k, bool(state)))
                         if key == 'use_custom_fonts':
                             widget.stateChanged.connect(self.update_font_combo)
+                
+                if key == 'seconds_font_size':
+                    widget.valueChanged.connect(self.update_seconds_font_size)
                 
                 setattr(self, f"{section}_{key}_widget", widget)
                 
@@ -190,7 +170,9 @@ class SettingsWindow(QDialog):
                     elif isinstance(widget, QCheckBox):
                         widget.setChecked(value)
                     elif isinstance(widget, QSlider):
-                        widget.setValue(value)                        
+                        widget.setValue(value)
+                    elif isinstance(widget, QComboBox):
+                        widget.setCurrentText(value)
 
     def save_setting(self, section, key, value):
         """Save a setting and emit the settings_changed signal."""
@@ -233,4 +215,12 @@ class SettingsWindow(QDialog):
         self.update_font_list(font_widget)
         current_font = self.config_manager.get_setting('clock', 'font')
         font_widget.setCurrentFont(QFont(current_font))
+
+    def update_seconds_font_size(self, value):
+        """Ensure that seconds font size is not larger than the main font size."""
+        main_font_size = self.config_manager.get_setting('clock', 'font_size')
+        if value > main_font_size:
+            self.clock_seconds_font_size_widget.setValue(main_font_size)
+            value = main_font_size
+        self.save_setting('clock', 'seconds_font_size', value)
         

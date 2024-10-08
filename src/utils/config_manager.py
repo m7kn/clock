@@ -1,5 +1,5 @@
 import yaml
-from settings_definition import get_default_config
+from .settings_definition import get_default_config
 
 def tuple_constructor(loader, node):
     """Custom YAML constructor for handling tuples."""
