@@ -21,6 +21,14 @@ SETTINGS = {
             'widget': QColorDialog,
             'label': 'Background Color'
         },
+        'background_margin': {
+            'type': 'int',
+            'default': 0,
+            'widget': QSpinBox,
+            'label': 'Background Margin',
+            'min': 0,
+            'max': 100
+        },
         'corner_radius': {
             'type': 'int',
             'default': 30,

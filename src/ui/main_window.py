@@ -21,11 +21,10 @@ class MainWindow(QMainWindow):
         """Set up the user interface for the main window."""
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
-        layout = QVBoxLayout(self.central_widget)
-        layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout = QVBoxLayout(self.central_widget)
         
         self.clock_widget = ClockWidget(self.config_manager)
-        layout.addWidget(self.clock_widget)
+        self.main_layout.addWidget(self.clock_widget)
         
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.show_context_menu)
@@ -43,6 +42,8 @@ class MainWindow(QMainWindow):
         
         bg_color = QColor(*config['main_window']['background_color'])
         corner_radius = config['main_window']['corner_radius']
+        background_margin = config['main_window']['background_margin']
+        
         self.setStyleSheet(f"""
             QMainWindow {{
                 background-color: {rgba_to_string(bg_color.getRgb())};
@@ -63,6 +64,7 @@ class MainWindow(QMainWindow):
         """)
         
         self.central_widget.setObjectName("centralWidget")
+        self.main_layout.setContentsMargins(background_margin, background_margin, background_margin, background_margin)
         self.clock_widget.update_config()
         self.show()  # Necessary to apply changes
         if config['main_window']['frameless']:
@@ -100,21 +102,36 @@ class MainWindow(QMainWindow):
         if event.button() == Qt.LeftButton:
             self.draggable = True
             self.offset = event.pos()
+            self.setCursor(Qt.ClosedHandCursor)  # Change cursor to indicate grabbing
 
     def mouseMoveEvent(self, event):
         """Handle mouse move events for window dragging."""
         if self.draggable and self.config_manager.get_config()['main_window']['frameless']:
+            config = self.config_manager.get_config()
+            corner_radius = config['main_window']['corner_radius']
+            background_margin = config['main_window']['background_margin']
+            
+            # Calculate the total offset including corner radius and background margin
+            total_offset_x = corner_radius + background_margin
+            total_offset_y = corner_radius + background_margin
+            
             new_pos = self.mapToGlobal(event.pos() - self.offset)
-            # Adjust the position to account for the corner radius
-            corner_radius = self.config_manager.get_config()['main_window']['corner_radius']
-            new_pos.setX(max(corner_radius, min(new_pos.x(), QGuiApplication.primaryScreen().geometry().width() - self.width() + corner_radius)))
-            new_pos.setY(max(corner_radius, min(new_pos.y(), QGuiApplication.primaryScreen().geometry().height() - self.height() + corner_radius)))
+            screen_geo = QGuiApplication.primaryScreen().geometry()
+            
+            # Adjust the position to account for the corner radius and background margin
+            new_pos.setX(max(total_offset_x, min(new_pos.x(), screen_geo.width() - self.width() + total_offset_x)))
+            new_pos.setY(max(total_offset_y, min(new_pos.y(), screen_geo.height() - self.height() + total_offset_y)))
+            
             self.move(new_pos)
 
     def mouseReleaseEvent(self, event):
         """Handle mouse release events for window dragging."""
         if event.button() == Qt.LeftButton:
             self.draggable = False
+            if self.config_manager.get_config()['main_window']['frameless']:
+                self.setCursor(Qt.OpenHandCursor)  # Change cursor back to indicate movability
+            else:
+                self.setCursor(Qt.ArrowCursor)  # Reset to default cursor
 
     def closeEvent(self, event):
         """Handle the window close event."""
