@@ -137,6 +137,24 @@ class ClockWidget(QWidget):
         super().resizeEvent(event)
         self.adjust_layout()
 
+    def calculate_stretch_factors(self, show_seconds):
+        char_widths = {'hours': 2, 'separator': 1, 'minutes': 2, 'seconds': 2}
+        total_width = sum(char_widths.values()) + (1 if show_seconds else -2)  # -2 for removing seconds and one separator
+        
+        factors = {}
+        factors['hours'] = int(char_widths['hours'] / total_width * 100)
+        factors['separator1'] = int(char_widths['separator'] / total_width * 100)
+        factors['minutes'] = int(char_widths['minutes'] / total_width * 100)
+        
+        if show_seconds:
+            factors['separator2'] = int(char_widths['separator'] / total_width * 100)
+            factors['seconds'] = int(char_widths['seconds'] / total_width * 100)
+        else:
+            factors['separator2'] = 0
+            factors['seconds'] = 0
+        
+        return factors
+
     def adjust_layout(self):
         """
         Adjust the layout of clock elements to fit the widget size.
@@ -147,15 +165,8 @@ class ClockWidget(QWidget):
         config = self.config_manager.get_config()
         show_seconds = config['clock']['show_seconds']
 
-        # Define stretch factors for each element
-        if show_seconds:
-            stretch_factors = {'hours': 28, 'separator1': 6, 'minutes': 28, 
-                               'separator2': 6, 'seconds': 28}
-        else:
-            stretch_factors = {'hours': 45, 'separator1': 10, 'minutes': 45, 
-                               'separator2': 0, 'seconds': 0}
+        stretch_factors = self.calculate_stretch_factors(show_seconds)
 
-        # Apply stretch factors
         layout = self.layout()
         for i, (key, element) in enumerate(self.clock_elements.items()):
             layout.setStretch(i, stretch_factors[key])
